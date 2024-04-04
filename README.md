@@ -12,7 +12,7 @@ sudo sh get-docker.sh
 * **Install wg-easy and pihole**  
 ````
 cd wg-easy-pihole
-docker compose up
+docker compose up -d
 ````
 
 ## Source
