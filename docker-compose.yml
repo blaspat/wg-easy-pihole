@@ -4,7 +4,7 @@ services:
   wg-easy:
     environment:
       # Change the server's hostname (clients will connect to):
-      - WG_HOST=158.178.236.238
+      - WG_HOST=168.138.166.248
 
       # Change the Web UI Password:
       - PASSWORD_HASH='$2a$12$ib7lYy9V5hYHDj4U5PjL8euvG6icAOQucU6aB9s0uH2PdMpglVn7q'
