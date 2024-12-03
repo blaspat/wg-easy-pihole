@@ -7,7 +7,7 @@ services:
       - WG_HOST=138.2.99.116
 
       # Change the Web UI Password:
-      - PASSWORD_HASH=#Akukeren111
+      - PASSWORD_HASH='$2a$12$ib7lYy9V5hYHDj4U5PjL8euvG6icAOQucU6aB9s0uH2PdMpglVn7q'
 
       # 💡 This is the Pi-Hole Container's IP Address
       - WG_DEFAULT_DNS=10.7.1.3
