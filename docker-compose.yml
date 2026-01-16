@@ -21,7 +21,7 @@ services:
     image: pihole/pihole
     container_name: pihole
     environment:
-      - FTLCONF_webserver_port='51822,[::]:51822'
+      - FTLCONF_webserver_port=51822
     volumes:
       - '~/.pihole/etc-pihole:/etc/pihole'
       - './.pihole/etc-dnsmasq.d:/etc/dnsmasq.d'
