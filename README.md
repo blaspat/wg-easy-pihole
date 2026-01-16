@@ -1,19 +1,52 @@
-Wireguard Easy with PiHole
+WireGuard Easy with PiHole
 ===========================
 
-## Installation
+### Features :
+1. WireGuard VPN + UI (Wireguard-Easy)
+2. Integrated with PiHole as a DNS server
 
-* **Clone**
-* **Install Docker**
+## Installation
+1. Install Docker
 ````
 curl -fsSL https://get.docker.com -o get-docker.sh  
 sudo sh get-docker.sh
 ````
-* **Install wg-easy and pihole**  
+2. Download Docker compose file
 ````
-cd wg-easy-pihole
-docker compose up -d
+sudo mkdir -p /opt/docker/wgeasy-pihole
+sudo curl -o /opt/docker/wgeasy-pihole/docker-compose.yml https://raw.githubusercontent.com/blaspat/wg-easy-pihole/refs/heads/main/docker-compose.yml
+````
+3. Start `wgeasy-pihole`
+````
+cd /opt/docker/wgeasy-pihole
+sudo docker compose up -d
+````
+4. Add ufw rules  
+ - If using reverse proxy
+````
+sudo ufw allow 51820
+sudo ufw allow 53
+````
+  Then set reverse proxy for port 8080 (PiHole UI) and 51821 (WireGuard UI)
+ - If not using reverse proxy
+````
+sudo ufw allow 51820
+sudo ufw allow 51821
+sudo ufw allow 53
+sudo ufw allow 8080
 ````
 
-## Source
-https://github.com/wg-easy/wg-easy
+## Port
+- **51820** : WireGuard VPN port
+- **51821** : WireGuard UI port
+- **53** : PiHole DNS port (default DNS port)
+- **8080** : PiHole UI port
+
+## Accessing UI
+- WireGuard Easy : http://127.0.0.1:51821
+- PiHole : http://127.0.0.1:8080
+
+## License
+[WireGuard](https://www.wireguard.com/)  
+[WireGuard-Easy](https://github.com/wg-easy/wg-easy)  
+[PiHole](https://pi-hole.net/)  
