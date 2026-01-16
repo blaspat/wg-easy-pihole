@@ -7,6 +7,7 @@ services:
     container_name: wg-easy
     environment:
       - PORT=51821
+      - INIT_DNS=${HOST_IP}
     network_mode: host
     volumes:
       - etc_wireguard:/etc/wireguard
