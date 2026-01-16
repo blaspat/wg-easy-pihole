@@ -35,6 +35,9 @@ sudo ufw allow 51821
 sudo ufw allow 51822
 sudo ufw allow 53
 ````
+5. Open WireGuard UI
+   - Update interface device to ethernet device, check using `ip a`
+   - Update DNS config, change to PiHole IP, for this docker compose, update to Host IP / LAN IP
 
 ## Port
 - **51820** : WireGuard VPN port
