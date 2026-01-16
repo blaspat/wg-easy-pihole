@@ -27,24 +27,24 @@ sudo docker compose up -d
 sudo ufw allow 51820
 sudo ufw allow 53
 ````
-  Then set reverse proxy for port 8080 (PiHole UI) and 51821 (WireGuard UI)
+  Then set reverse proxy for port 51822 (PiHole UI) and 51821 (WireGuard UI)
  - If not using reverse proxy
 ````
 sudo ufw allow 51820
 sudo ufw allow 51821
+sudo ufw allow 51822
 sudo ufw allow 53
-sudo ufw allow 8080
 ````
 
 ## Port
 - **51820** : WireGuard VPN port
 - **51821** : WireGuard UI port
+- **51822** : PiHole UI port
 - **53** : PiHole DNS port (default DNS port)
-- **8080** : PiHole UI port
 
 ## Accessing UI
 - WireGuard Easy : http://127.0.0.1:51821
-- PiHole : http://127.0.0.1:8080
+- PiHole : http://127.0.0.1:51822
 
 ## License
 [WireGuard](https://www.wireguard.com/)  
