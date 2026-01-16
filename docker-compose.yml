@@ -6,7 +6,7 @@ services:
     image: ghcr.io/wg-easy/wg-easy:15
     container_name: wg-easy
     environment:
-      - PORT: '51821'
+      - PORT='51821'
     network_mode: host
     volumes:
       - etc_wireguard:/etc/wireguard
@@ -20,7 +20,7 @@ services:
     image: pihole/pihole
     container_name: pihole
     environment:
-      - FTLCONF_webserver_port: '8080,[::]:8080'
+      - FTLCONF_webserver_port='8080,[::]:8080'
     volumes:
       - '~/.pihole/etc-pihole:/etc/pihole'
       - './.pihole/etc-dnsmasq.d:/etc/dnsmasq.d'
