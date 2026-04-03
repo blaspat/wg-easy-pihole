@@ -1,13 +1,15 @@
 volumes:
   etc_wireguard:
-  
+  pihole_etc:
+  pihole_dnsmasq:
+
 services:
   wg-easy:
     image: ghcr.io/wg-easy/wg-easy:15
     container_name: wg-easy
     environment:
       - PORT=51821
-      - INIT_DNS=${HOST_IP}
+      - TZ=${TZ:-UTC}
     network_mode: host
     volumes:
       - etc_wireguard:/etc/wireguard
@@ -16,14 +18,31 @@ services:
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
-      
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:51821/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
   pihole:
-    image: pihole/pihole
+    image: pihole/pihole:latest
     container_name: pihole
     environment:
-      - FTLCONF_webserver_port='51822,[::]:51822'
+      - TZ=${TZ:-UTC}
+      - FTLCONF_webserver_port=51822
+      - FTLCONF_DNS_upstream=1.1.1.1,8.8.8.8
+      - WEBPASSWORD=${PIHOLE_PASSWORD:-}
     volumes:
-      - '~/.pihole/etc-pihole:/etc/pihole'
-      - './.pihole/etc-dnsmasq.d:/etc/dnsmasq.d'
+      - pihole_etc:/etc/pihole
+      - pihole_dnsmasq:/etc/dnsmasq.d
     network_mode: host
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:51822/admin/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    depends_on:
+      - wg-easy

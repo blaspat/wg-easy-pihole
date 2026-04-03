@@ -1,52 +1,108 @@
-WireGuard Easy with PiHole
-===========================
+# WireGuard Easy + PiHole
 
-### Features :
-1. WireGuard VPN + UI (Wireguard-Easy)
-2. Integrated with PiHole as a DNS server
+Docker compose setup for running WireGuard VPN and PiHole DNS ad-blocker together on the same host.
 
-## Installation
-1. Install Docker
-````
-curl -fsSL https://get.docker.com -o get-docker.sh  
+## Features
+
+- WireGuard VPN with web UI (wg-easy)
+- PiHole DNS-level ad blocking
+- DNS queries routed through WireGuard VPN clients via PiHole
+- Healthchecks for reliable restarts
+
+## Requirements
+
+- A Linux host (Ubuntu/Debian recommended)
+- Docker and Docker Compose
+- Open ports: 51820/UDP, 51821/TCP, 51822/TCP, 53/UDP
+
+## Quick Setup
+
+```bash
+# 1. Install Docker
+curl -fsSL https://get.docker.com -o get-docker.sh
 sudo sh get-docker.sh
-````
-2. Download Docker compose file
-````
+
+# 2. Create directory
 sudo mkdir -p /opt/docker/wgeasy-pihole
-sudo curl -o /opt/docker/wgeasy-pihole/docker-compose.yml https://raw.githubusercontent.com/blaspat/wg-easy-pihole/refs/heads/main/docker-compose.yml
-````
-3. Start `wgeasy-pihole`
-````
 cd /opt/docker/wgeasy-pihole
+
+# 3. Download docker-compose.yml
+sudo curl -o docker-compose.yml https://raw.githubusercontent.com/blaspat/wg-easy-pihole/main/docker-compose.yml
+
+# 4. Create .env file (set your own password!)
+sudo nano .env
+# Add: PIHOLE_PASSWORD=your_secure_password_here
+# Add: TZ=Asia/Jakarta (or your timezone)
+
+# 5. Start
 sudo docker compose up -d
-````
-4. Add ufw rules  
- - If using reverse proxy
-````
-sudo ufw allow 51820
-sudo ufw allow 53
-````
-  Then set reverse proxy for port 51822 (PiHole UI) and 51821 (WireGuard UI)
- - If not using reverse proxy
-````
-sudo ufw allow 51820
-sudo ufw allow 51821
-sudo ufw allow 51822
-sudo ufw allow 53
-````
+```
 
-## Port
-- **51820** : WireGuard VPN port
-- **51821** : WireGuard UI port
-- **51822** : PiHole UI port
-- **53** : PiHole DNS port (default DNS port)
+## Configuration
 
-## Accessing UI
-- WireGuard Easy : http://127.0.0.1:51821
-- PiHole : http://127.0.0.1:51822
+Edit the `.env` file before starting:
 
-## License
-[WireGuard](https://www.wireguard.com/)  
-[WireGuard-Easy](https://github.com/wg-easy/wg-easy)  
-[PiHole](https://pi-hole.net/)  
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `PIHOLE_PASSWORD` | _(none)_ | Admin password for PiHole UI. **Required.** |
+| `TZ` | `UTC` | Timezone (e.g. `Asia/Jakarta`, `America/New_York`) |
+
+## Ports
+
+| Port | Protocol | Service |
+|------|----------|---------|
+| 51820 | UDP | WireGuard VPN |
+| 51821 | TCP | WireGuard UI |
+| 51822 | TCP | PiHole UI |
+| 53 | UDP | PiHole DNS |
+
+## Accessing the UIs
+
+- **WireGuard UI:** http://your-server-ip:51821
+- **PiHole Admin:** http://your-server-ip:51822/admin
+
+## Firewall (UFW)
+
+```bash
+sudo ufw allow 51820/udp   # WireGuard VPN
+sudo ufw allow 51821/tcp   # WireGuard UI
+sudo ufw allow 51822/tcp   # PiHole UI
+sudo ufw allow 53/udp      # PiHole DNS
+sudo ufw reload
+```
+
+## Client Setup
+
+After starting the services:
+
+1. Open WireGuard UI at port 51821
+2. Create a new client — download the `.conf` file
+3. Import the config into your WireGuard client app
+4. All DNS queries from the VPN client will be routed through PiHole
+
+## Managing
+
+```bash
+# View logs
+sudo docker compose logs -f
+
+# Restart
+sudo docker compose restart
+
+# Stop
+sudo docker compose down
+
+# Update images
+sudo docker compose pull
+sudo docker compose up -d
+```
+
+## How It Works
+
+Both containers run in `host` network mode so WireGuard can manage the VPN interface directly and PiHole can serve DNS on port 53. WireGuard VPN clients have their DNS queries routed through the local PiHole instance, blocking ads and trackers at the network level.
+
+## Credits
+
+- [WireGuard](https://www.wireguard.com/)
+- [wg-easy](https://github.com/wg-easy/wg-easy)
+- [PiHole](https://pi-hole.net/)
