@@ -29,8 +29,9 @@ cd /opt/docker/wgeasy-pihole
 # 3. Download docker-compose.yml
 sudo curl -o docker-compose.yml https://raw.githubusercontent.com/blaspat/wg-easy-pihole/main/docker-compose.yml
 
-# 4. Create .env file (set your own password!)
+# 4. Create .env file (set your own values!)
 sudo nano .env
+# Add: HOST_IP=192.168.1.100 (your server's LAN IP)
 # Add: PIHOLE_PASSWORD=your_secure_password_here
 # Add: TZ=Asia/Jakarta (or your timezone)
 
@@ -44,6 +45,7 @@ Edit the `.env` file before starting:
 
 | Variable | Default | Description |
 |----------|---------|-------------|
+| `HOST_IP` | _(none)_ | Your server's LAN IP. WireGuard clients use this as their DNS server (points to PiHole). **Required.** |
 | `PIHOLE_PASSWORD` | _(none)_ | Admin password for PiHole UI. **Required.** |
 | `TZ` | `UTC` | Timezone (e.g. `Asia/Jakarta`, `America/New_York`) |
 
@@ -99,7 +101,7 @@ sudo docker compose up -d
 
 ## How It Works
 
-Both containers run in `host` network mode so WireGuard can manage the VPN interface directly and PiHole can serve DNS on port 53. WireGuard VPN clients have their DNS queries routed through the local PiHole instance, blocking ads and trackers at the network level.
+Both containers run in `host` network mode so WireGuard can manage the VPN interface directly and PiHole can serve DNS on port 53. When a WireGuard client connects, `INIT_DNS` is set to the host IP so all the client's DNS queries go through the local PiHole instance — blocking ads and trackers at the network level for all VPN traffic.
 
 ## Credits
 

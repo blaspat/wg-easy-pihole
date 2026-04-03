@@ -9,6 +9,7 @@ services:
     container_name: wg-easy
     environment:
       - PORT=51821
+      - INIT_DNS=${HOST_IP}
       - TZ=${TZ:-UTC}
     network_mode: host
     volumes:
